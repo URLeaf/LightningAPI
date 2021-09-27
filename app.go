@@ -3,11 +3,11 @@ package main
 import "github.com/gin-gonic/gin"
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	app := gin.Default()
+	app.LoadHTMLGlob("static/*")
+
+	app.GET("/", serveStatic)
+	app.POST("/api", getLink)
+
+	app.Run(":2000")
 }
