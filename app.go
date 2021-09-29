@@ -10,6 +10,9 @@ func main() {
 
 	app.GET("/", serveStatic)
 	app.POST("/api", getLink)
+	app.GET("/link/:id", hrefMe)
 
 	app.Run(":4000")
+
+	defer client.Disconnect(ctx)
 }

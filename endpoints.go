@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +12,7 @@ var serveStatic = func(c *gin.Context) {
 
 var getLink = func(c *gin.Context) {
 	var req LinkRequest
+
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"errorr": err.Error(),
@@ -20,13 +20,18 @@ var getLink = func(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(req.Link)
+	var res = LinkResponse{
+		ID:   makeID(6),
+		Link: req.Link,
+	}
 
-	id := makeID(6)
+	PostLink(res)
+	c.JSON(http.StatusOK, res)
+}
 
-	c.JSON(http.StatusOK, gin.H{
-		"id":   id,
-		"link": req.Link,
-	})
+var hrefMe = func(c *gin.Context) {
+	id := c.Param("id")
+	takeMe(id)
 
+	c.String(http.StatusOK, id)
 }
