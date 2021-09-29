@@ -6,8 +6,10 @@ func main() {
 	app := gin.Default()
 	app.LoadHTMLGlob("static/*")
 
+	mongodbInit()
+
 	app.GET("/", serveStatic)
 	app.POST("/api", getLink)
 
-	app.Run(":2000")
+	app.Run(":4000")
 }
