@@ -1,18 +1,35 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/static"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 	app := gin.Default()
-	app.LoadHTMLGlob("static/*")
 
+	// Cors
+	app.Use(cors.Default())
+
+	// Serving static
+	app.Use(static.Serve("/", static.LocalFile("static/", false)))
+	app.NoRoute(func(c *gin.Context) {
+		c.HTML(http.StatusOK, "static/index.html", gin.H{})
+	})
+
+	// Database
 	mongodbInit()
 
-	app.GET("/", serveStatic)
+	// Routes
 	app.POST("/api", getLink)
-	app.GET("/link/:id", hrefMe)
+	app.GET("/get/:id", findLink)
+	app.GET("/:id", hrefMe)
 
-	app.Run(":4000")
+	// Run
+	app.Run(":80")
 
 	defer client.Disconnect(ctx)
 }

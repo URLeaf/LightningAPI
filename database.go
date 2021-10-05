@@ -23,7 +23,7 @@ func mongodbInit() {
 	}
 }
 
-func takeMe(ID string) {
+func takeMe(ID string) interface{} {
 	ctx, errrrrrr := context.WithTimeout(context.Background(), 10*time.Second)
 	if errrrrrr != nil {
 		fmt.Println(errrrrrr)
@@ -33,7 +33,11 @@ func takeMe(ID string) {
 	if err := links.FindOne(ctx, bson.M{"ID": ID}).Decode(&link); err != nil {
 		log.Print(err)
 	}
-	fmt.Println(link["Link"])
+
+	finalll := link["Link"]
+	fmt.Println(finalll)
+	return finalll
+
 }
 
 func PostLink(req LinkResponse) {

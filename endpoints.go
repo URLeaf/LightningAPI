@@ -1,13 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
 )
 
 var serveStatic = func(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{})
+	c.HTML(http.StatusOK, "static/index.html", gin.H{})
 }
 
 var getLink = func(c *gin.Context) {
@@ -29,9 +31,16 @@ var getLink = func(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+var findLink = func(c *gin.Context) {
+	id := c.Param("id")
+	mylink := takeMe(id)
+
+	c.JSON(http.StatusOK, mylink)
+}
+
 var hrefMe = func(c *gin.Context) {
 	id := c.Param("id")
-	takeMe(id)
-
-	c.String(http.StatusOK, id)
+	mylink := fmt.Sprintf("%v", takeMe(id))
+	location := url.URL{Path: "//" + mylink}
+	c.Redirect(http.StatusFound, location.RequestURI())
 }
